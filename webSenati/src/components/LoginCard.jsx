@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Navigate } from 'react-router-dom';
 
 export function LoginCard() {
@@ -39,11 +39,12 @@ export function LoginCard() {
 
     if (loggedIn) {
         if (isStudent) {
-            return <Navigate to="/student" />;
+            return <Navigate to="/home" state={{ usuario: username }} />;
+
         }
-        //if (isTeacher) {
-         //   return <Navigate to="/teacher" />;
-        //}
+        if (isTeacher) {
+            return <Navigate to="/home" state={{ usuario: username }} />;
+        }
     }
 
     return (

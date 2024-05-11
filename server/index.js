@@ -27,12 +27,14 @@ wsServer.on("request", function(request){
         Object.getOwnPropertyNames(connectedUsers)
     );
 
+    console.log("test1")
+
     connection.on("message", function(message){
         console.log("Received Message: ", message.utf8Data);
         
         for(id in connectedUsers){
             connectedUsers[id].sendUTF(message.utf8Data);
-            console.log("Sent mensaje to: ", connectedUsers[id]);
+            //console.log("Sent mensaje to: ", connectedUsers[id]);
         }
     })
 })

@@ -5,7 +5,7 @@ const client = new Socket("ws://127.0.0.1:8000");
 
 const Chat = ({usuarioName}) => {
     const [miMensaje, setMiMensaje] = useState("")
-    const [mensajes, setMensajes] = useState([])
+    const [messages, setMessages] = useState([])
     const onSend = () =>{
         client.send(
             JSON.stringify({
@@ -23,8 +23,8 @@ const Chat = ({usuarioName}) => {
         }
         client.onmessage=(message)=>{
             const data = JSON.parse(message.data)
-            setMensajes((mensajes)=>[
-                ...mensajes,
+            setMessages((messages)=>[
+                ...messages,
                 {
                     message:data.message,
                     usuarioName: data.usuarioName
@@ -35,12 +35,16 @@ const Chat = ({usuarioName}) => {
 
     return(
         <>
-            <div className="bg-slate-500">Chat: {usuarioName}</div>
-
-            <div className="w-72 m-10 rounded-lg border">
-                {mensajes.map((message, key)=>(
-                    <div key={key} className={`message ${
-                        usuarioName === message.usuarioName ? "items-start" : "items-end bg-slate-500"
+            <div className="relative">
+                <div className="w-full py-2 text-center text-white bg-slate-500">Chat: {usuarioName}</div>
+            </div>
+        <div className="flex flex-col justify-end w-full h-[90vh]">
+            <div className="flex flex-col pb-12 overflow-auto">
+                {messages.map((message, key)=>(
+                    <div key={key} className={`w-72 m-10 rounded-lg border pt-5 px-5 pb-4 ${
+                        console.log("Otros:"+message.usuarioName),
+                        console.log("Yo: "+usuarioName),
+                        usuarioName === message.usuarioName ? "self-end" : "self-start bg-slate-500"
                     }`}>
                         <section className="flex justify-center items-center flex-wrap mr-7 text-3xl bg-yellow-500 w-12 h-12 float-left rounded-full border">{message.usuarioName[0].toUpperCase()}</section>
                         <h4 className="mt-0 mb-2.5">{message.usuarioName + ":"}</h4>
@@ -49,13 +53,14 @@ const Chat = ({usuarioName}) => {
                 ))}
             </div>
 
-            <div>
-                <input className="rounded-lg border pl-2.5 pr-3.5 " type="miMensaje" 
+        </div>
+            <div className="bottom-0 left-0 w-full flex">
+                <input className="border border-indigo-500 rounded-lg pl-2.5 pr-3.5 text-lg flex-1" type="miMensaje" 
                 value={miMensaje} 
                 onChange={(e)=>setMiMensaje(e.target.value)} 
                 onKeyUp={(e) => e.key === "Enter" && onSend()} 
                 placeholder="Mensaje" />
-                <button className="rounded-lg bg-amber-400" onClick={onSend}>Enviar</button>
+                <button className="rounded-lg text-lg bg-amber-400 text-white px-8 py-2 cursor-pointer font-sans" onClick={onSend}>Enviar</button>
             </div>
         </>
     )
