@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { w3cwebsocket as Socket } from "websocket";
 
-const client = new Socket("ws://127.0.0.1:8001");
+const client = new Socket("https://bdrll2l3-8001.brs.devtunnels.ms/");
 
 const Chat = ({usuarioName}) => {
     const [miMensaje, setMiMensaje] = useState("")
