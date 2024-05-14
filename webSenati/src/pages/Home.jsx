@@ -3,6 +3,7 @@ import { useState } from 'react'
 // import Logeo from '../components/Logeo'
 import { useLocation } from 'react-router-dom';
 import Chat from '../components/Chat'
+import Posts from '../components/Posts';
 
 export function Home() {
   // const [userName, setUserName] = useState("")
@@ -23,7 +24,9 @@ export function Home() {
         <div className='h-full flex-grow' id='wrapper'>
           <Chat usuarioName={usuario} />
         </div>
-        
+
+        <Posts/>
+
       </div>
 
 

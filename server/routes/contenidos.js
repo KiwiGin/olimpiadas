@@ -3,7 +3,7 @@ import { getContenidos } from '../controllers/contenido.js';
 
 const router = express.Router();
 
-router.get('', getContenidos)
+router.get('/', getContenidos)
 
 
 export default router;
