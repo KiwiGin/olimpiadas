@@ -9,15 +9,14 @@ const Posts = ({ userId }) => {
       makeRequest.get("/contenidos").then((res) => res.data), // Specify the function to fetch posts
   });
 
-  console.log(data);
 
   return (
     <div className="posts">
-      {/* {error
+      {error
         ? "Something went wrong!"
         : isLoading
         ? "loading"
-        : data.map((post) => <Post post={post} key={post.id} />)} */}
+        : data.map((post) => <Post post={post} key={post.id} />)}
     </div>
   );
 };

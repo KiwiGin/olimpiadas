@@ -16,7 +16,7 @@ app.use((req,res,next) => {
 })
 app.use(express.json());
 app.use(cors({
-    origin: 'https://bdrll2l3-5173.brs.devtunnels.ms/',
+    origin: 'http://localhost:5173',
     credentials: true
 }));
 app.use(cookieParser());

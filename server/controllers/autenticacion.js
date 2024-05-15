@@ -9,6 +9,7 @@ export const register = (req, res) => {
     const query = 'SELECT * FROM usuarios WHERE nombre = ?';
 
     db.query(query, [req.body.nombre], (err, result) => {
+        //console.log(err)
         if (err) {
             return res.status(500).json('Error 1');
         }
