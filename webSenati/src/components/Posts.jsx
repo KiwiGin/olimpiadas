@@ -4,14 +4,16 @@ import Post from "./Post";
 
 const Posts = ({ userId }) => {
   const { isLoading, error, data } = useQuery({
-    queryKey: ["contenidos", userId], // Specify the query key as an array
+    queryKey: ["contenidos", userId], 
     queryFn: () =>
-      makeRequest.get("/contenidos").then((res) => res.data), // Specify the function to fetch posts
+      makeRequest.get("/contenidos").then((res) => res.data), 
   });
+
+  console.log(data);
 
 
   return (
-    <div className="posts">
+    <div className="flex flex-col gap-12">
       {error
         ? "Something went wrong!"
         : isLoading

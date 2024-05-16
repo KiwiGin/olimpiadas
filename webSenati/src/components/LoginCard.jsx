@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext.jsx';
+import coco from '../assets/coco1.jfif'
 
 export function LoginCard() {
     const [nombre, setUsername] = useState('');
@@ -10,9 +11,8 @@ export function LoginCard() {
     // const [isTeacher, setIsTeacher] = useState(false);
     const [err, setErr] = useState(null)
     const authContext = useContext(AuthContext);
-    console.log("AuthContext value:", authContext); // Check the console for the context value
-    const { login } = authContext; // Destructure login function if available
-
+    console.log("AuthContext value:", authContext); 
+    const { login } = authContext; 
     const navigate = useNavigate();
 
     const handleUsernameChange = (e) => {
@@ -36,7 +36,7 @@ export function LoginCard() {
 
 
 
-        // Perform login logic here
+        
         console.log('Username:', nombre);
         console.log('Password:', contraseña);
         // Se validan credenciales
@@ -64,25 +64,45 @@ export function LoginCard() {
     // }
 
     return (
-        <div className='flex-col p-4 text-center space-y-8 bg-gradient-to-b from-cyan-300 from-80% w-2/5'>
-            <h1>INICIO DE SESIÓN</h1>
+        <>
 
-            <form onSubmit={handleSubmit}>
-                <label className='flex flex-col'>
-                    Usuario
-                    <input type="text" value={nombre} onChange={handleUsernameChange} />
-                </label>
-                <br />
-                <label className='flex flex-col'>
-                    Contraseña
-                    <input type="password" value={contraseña} onChange={handlePasswordChange} />
-                </label>
-                <br />
-                <a href="#">¿No recuerda su contraseña?</a>
-                <br />
-                {err && err}
-                <button type="submit" className="rounded-full bg-red-500 text-white px-4 py-2">Login</button>
-            </form>
+        <div className='flex flex-row items-center justify-center w-full h-full mx-96'>
+
+            <div className='flex flex-row text-center bg-gradient-to-b from-yellow-200 from-5% to-green-600 rounded-3xl w-full'>
+                <div className='flex flex-col w-full'>
+                    <div className='flex flex-col items-center justify-center mt-5 w-full'>
+                        <div className='w-20 mt-5'>
+                            <img className='object-cover' src="/logococo.svg" alt="" />
+                        </div>
+
+                        <h1>INICIO DE SESIÓN</h1>
+                        <br/><br />
+                        <form onSubmit={handleSubmit}>
+                            <label className='flex flex-col'>
+                                Usuario
+                                <input className='rounded-3xl px-4 py-2' type="text" value={nombre} onChange={handleUsernameChange} />
+                            </label>
+                            <br />
+                            <label className='flex flex-col'>
+                                Contraseña
+                                <input className='rounded-3xl px-4 py-2' type="password" value={contraseña} onChange={handlePasswordChange} />
+                            </label>
+                            <br />
+                            <a href="#">¿No recuerda su contraseña?</a>
+                            <br />
+                            {err && err}
+                            <button type="submit" className="rounded-full bg-red-500 text-white px-4 py-2 w-full">Login</button>
+                        </form>
+                    </div>
+
+                </div>
+                <div className='my-5'>
+                    <img src={coco} alt="Image" className="rounded-3xl object-cover relative top-[-2px] right-[-40px]" />
+                </div>
+
+                
+            </div>
         </div>
+        </>
     );
 }

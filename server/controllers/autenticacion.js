@@ -38,7 +38,7 @@ export const login = (req, res) => {
     console.log(req.body.nombre);
     db.query(q, [req.body.nombre], (err, result) => {
         if (err) {
-            return res.status(500).json('Error');
+            return res.status(500).json('Error 3');
         }
         console.log(result);
         if (result.length===0) {

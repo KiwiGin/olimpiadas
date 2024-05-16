@@ -3,8 +3,8 @@ import { LoginCard } from '../components/LoginCard'
 
 export function Login() {
   return (
-    <>
-        <LoginCard/>
-    </>
+    <div className="flex items-center h-full w-dvw bg-slate-500">
+      <LoginCard/>
+    </div>
   )
 }

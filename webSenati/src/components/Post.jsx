@@ -50,39 +50,40 @@ const Post = ({ post }) => {
   const handleDelete = async () => {
     try {
       await axios.delete("/posts/" + post.id);
-      // Optionally, you can trigger a re-fetch of posts or navigate away
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div className="post">
+    <div className="shadow-custom bg-white rounded-3xl m-5">
       <div className="p-5">
-        <div className="flex items-center content-between relative">
+        <div className="flex items-center justify-between relative">
           <div className="flex gap-5">
-            <img src={"/upload/" + post.profilePic} alt="" />
+            {/* <img className="w-10 h-10 rounded-full object-cover" src={"/upload/" + post.profilePic} alt="" /> */}
+            <img className="w-10 h-10 rounded-full object-cover" src={"https://images.pexels.com/photos/23720223/pexels-photo-23720223.jpeg/"} alt="" />
             <div className="flex flex-col">
               <Link
-                to={`/profile/${post.userId}`}
+                to={`/profile/${post.userid}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <span className="font-medium">{post.name}</span>
+                <span className="font-medium">{post.usernombre}</span>
               </Link>
-              <span className="text-xs">{moment(post.createdAt).fromNow()}</span>
+              <span className="text-xs">{moment(post.fecha_subida).fromNow()}</span>
             </div>
           </div>
           <MoreHorizIcon onClick={() => setMenuOpen(!menuOpen)} />
-          {menuOpen && post.userId === currentUser.id && (
+          {menuOpen && post.userid === currentUser.id && (
             <button onClick={handleDelete}>delete</button>
           )}
         </div>
-        <div className="content">
-          <p>{post.desc}</p>
-          <img src={"/upload/" + post.img} alt="" />
+        <div className="my-5">
+          <p>{post.titulo}</p>
+          {/* <img className="w-full max-h-[500px] object-cover mt-5" src={"/upload/" + post.img} alt="" /> */}
+          <img className="w-full max-h-[500px] object-cover mt-5" src={"https://images.pexels.com/photos/21287054/pexels-photo-21287054/free-photo-of-comida-ciudad-vacaciones-calle.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"} alt="" />
         </div>
-        <div className="info">
-          <div className="item">
+        <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2 cursor-pointer text-[14px]">
             {isLoading ? (
               "loading"
             ) : likes.includes(currentUser.id) ? (
@@ -95,11 +96,11 @@ const Post = ({ post }) => {
             )}
             {likes?.length} Likes
           </div>
-          <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
+          <div className="flex items-center gap-2 cursor-pointer text-[14px]" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
             See Comments
           </div>
-          <div className="item">
+          <div className="flex items-center gap-2 cursor-pointer text-[14px]">
             <ShareOutlinedIcon />
             Share
           </div>
