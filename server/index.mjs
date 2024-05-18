@@ -4,6 +4,7 @@ import usuarioRoutes from './routes/usuarios.js';
 import contenidoRoutes from './routes/contenidos.js';
 import comentarioRoutes from './routes/comentarios.js';
 import autenticacionRoutes from './routes/autenticacion.js';
+import relacionRoutes from './routes/relacion.js';
 import server from './websock.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -42,7 +43,7 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/contenidos', contenidoRoutes);
 app.use('/api/comentarios', comentarioRoutes);
 app.use('/api/autenticacion', autenticacionRoutes);
-
+app.use('/api/relacion', relacionRoutes);
 
 app.listen(8000, () => {
     console.log('Server is running on port 8000...');

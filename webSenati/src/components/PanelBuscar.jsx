@@ -5,12 +5,26 @@ import { AuthContext } from "../context/authContext";
 
 function PanelBuscar() {
     // Supongamos que tienes un array de usuarios
-    const [usuarios, setUsuarios] = useState([]);
+    // const [usuarios, setUsuarios] = useState([]);
 
     const [busqueda, setBusqueda] = useState('');
     const [resultados, setResultados] = useState([]);
+    const [idAmigo, setIdAmigo] = useState('');
+    
     const { currentUser } = useContext(AuthContext);
     console.log(currentUser.id)
+
+    const handleSeguir = async(e) => {
+        e.preventDefault();
+        // Seguir a un usuario
+        try {
+            await makeRequest.post(`/relacion/addRela`, {id_usuario: currentUser.id, id_amigo: idAmigo});
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
 
 
 
@@ -36,6 +50,11 @@ function PanelBuscar() {
     
             // Actualizar el estado de resultados
             setResultados(userData);
+            resultados.map(usuario => (
+                setIdAmigo(usuario.id)
+            )
+        );
+            
         } catch (err) {
             console.error(err);
         } finally {
@@ -80,7 +99,7 @@ function PanelBuscar() {
                                     <tr key={usuario.id}>
                                         <td className='border border-gray-800 p-2'>{usuario.nombre}</td>
                                         <td className='border border-gray-800 p-2'>
-                                            <button className='bg-blue-500 rounded-3xl p-2 px-4'>Seguir</button>
+                                            <button onClick={handleSeguir} className='bg-blue-500 rounded-3xl p-2 px-4'>Seguir</button>
                                         </td>
                                     </tr>
                                 ))}

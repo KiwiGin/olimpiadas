@@ -10,8 +10,8 @@ export const getContenidos = async (req, res) => {
     const {userId} = req.query;
 
     if(userId) {
-        const q = 'SELECT c.id, c.ruta, u.id as userid, titulo, u.nombre as usernombre, u.profilePic as profilePic, fecha_subida FROM contenido AS c JOIN usuarios AS u ON c.id_usuario = u.id WHERE c.id_usuario='+ userId +' ORDER BY c.fecha_subida DESC';
-        db.query(q, (err, result) => {
+        const q = 'SELECT c.id, c.ruta, u.id as userid, titulo, u.nombre as usernombre, u.profilePic as profilePic, fecha_subida FROM contenido AS c JOIN usuarios AS u ON c.id_usuario = u.id WHERE c.id_usuario=? ORDER BY c.fecha_subida DESC';
+        db.query(q, [userId], (err, result) => {
             if (err) {
                 console.log(err);
                 res.status(500).send('Error al obtener los contenidos');
