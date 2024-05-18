@@ -3,6 +3,12 @@ import { useLocation } from 'react-router-dom';
 import Chat from '../components/Chat'
 import Posts from '../components/Posts';
 import Share from '../components/Share';
+import PanelContent from '../components/PanelContent';
+import Sidebar from '../components/Sidebar';
+import SidebarDerecho from '../components/SidebarDerecho';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import PanelPerfil from '../components/PanelPerfil';
+import PanelBuscar from '../components/PanelBuscar';
 
 export function Home() {
   const location = useLocation();
@@ -11,19 +17,18 @@ export function Home() {
 
   return (
     <>
-      <div className='flex w-full h-screen'>
+      <div className='flex w-full h-screen flex-row justify-center'>
+        <Sidebar/>
+          <Routes>
+            <Route path="/" element={<PanelContent />} />
+            <Route path="buscar" element={<PanelBuscar />} />
+            <Route path="miperfil" element={<PanelPerfil />} />
+          </Routes>
+        <SidebarDerecho/>
 
-        <div className='relative w-9/12 h-full bg-green-200 overflow-auto'>
-          <Share/>
-          <Posts/>
-          {/* <div className="absolute bottom-4 right-4">
-            <button className='rounded-lg text-lg bg-white text-black px-8 py-2 cursor-pointer font-sans'>Post</button>
-          </div> */}
-        </div>
-
-        <div className='h-full flex-grow' id='wrapper'>
+        {/* <div className='h-full flex-grow' id='wrapper'>
           <Chat usuarioName={usuario} />
-        </div>
+        </div> */}
 
       </div>
     </>

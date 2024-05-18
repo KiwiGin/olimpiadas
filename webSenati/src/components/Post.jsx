@@ -10,6 +10,7 @@ import { useState, useEffect, useContext } from "react";
 import moment from "moment";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
+import PerfilDefault from '../assets/perfil_default.svg';
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -61,7 +62,7 @@ const Post = ({ post }) => {
         <div className="flex items-center justify-between relative">
           <div className="flex gap-5">
             {/* <img className="w-10 h-10 rounded-full object-cover" src={"/upload/" + post.profilePic} alt="" /> */}
-            <img className="w-10 h-10 rounded-full object-cover" src={"https://images.pexels.com/photos/23720223/pexels-photo-23720223.jpeg/"} alt="" />
+            <img className="w-10 h-10 rounded-full object-cover bg-white" src={PerfilDefault} alt="" />
             <div className="flex flex-col">
               <Link
                 to={`/profile/${post.userid}`}
@@ -79,8 +80,8 @@ const Post = ({ post }) => {
         </div>
         <div className="my-5">
           <p>{post.titulo}</p>
-          {/* <img className="w-full max-h-[500px] object-cover mt-5" src={"/upload/" + post.img} alt="" /> */}
-          <img className="w-full max-h-[500px] object-cover mt-5" src={"https://images.pexels.com/photos/21287054/pexels-photo-21287054/free-photo-of-comida-ciudad-vacaciones-calle.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"} alt="" />
+          <img className="w-full max-h-[500px] object-cover mt-5" src={"/upload/" + post.ruta} alt="" />
+          {/* <img className="w-full max-h-[500px] object-cover mt-5" src={"https://images.pexels.com/photos/21287054/pexels-photo-21287054/free-photo-of-comida-ciudad-vacaciones-calle.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"} alt="" /> */}
         </div>
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-2 cursor-pointer text-[14px]">

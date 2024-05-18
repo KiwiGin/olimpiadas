@@ -4,7 +4,7 @@ import { getContenidos, postear } from '../controllers/contenido.js';
 const router = express.Router();
 
 router.get('/', getContenidos)
-router.post('/', postear)
+router.post('/postear', postear)
 
 
 export default router;

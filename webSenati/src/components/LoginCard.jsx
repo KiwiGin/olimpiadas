@@ -70,7 +70,7 @@ export function LoginCard() {
 
             <div className='flex flex-row text-center bg-gradient-to-b from-yellow-200 from-5% to-green-600 rounded-3xl w-full'>
                 <div className='flex flex-col w-full'>
-                    <div className='flex flex-col items-center justify-center mt-5 w-full'>
+                    <div className='flex flex-col items-center justify-center m-6 w-full'>
                         <div className='w-20 mt-5'>
                             <img className='object-cover' src="/logococo.svg" alt="" />
                         </div>

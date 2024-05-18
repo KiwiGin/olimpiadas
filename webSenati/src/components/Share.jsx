@@ -2,10 +2,13 @@ import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/authContext";
 import { makeRequest } from "../axios";
 import Image from "../assets/img.png";
+import PerfilDefault from '../assets/perfil_default.svg';
 
 const Share = () => {
   const [file, setFile] = useState(null);
+  //desc es titulo, ya veo si le cambio el nombre o ne
   const [desc, setDesc] = useState("");
+
   const [imgUrl, setImgUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const { currentUser } = useContext(AuthContext);
@@ -32,10 +35,11 @@ const Share = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await makeRequest.post("/contenidos", { desc, img: imgUrl });
+      await makeRequest.post("/contenidos/postear", { titulo: desc, id_usuario: currentUser.id, ruta: imgUrl});
       setDesc("");
       setFile(null);
       setImgUrl("");
+      window.location.reload();
     } catch (err) {
       console.log(err);
     } finally {
@@ -48,7 +52,9 @@ const Share = () => {
       <div className="p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center grow">
-            <img className="w-10 h-10 rounded-full object-cover" src={"/upload/" + currentUser.profilePic} alt="" />
+
+            <img className="w-10 h-10 rounded-full object-cover bg-white" src={PerfilDefault} alt="" />
+            {/* <img className="w-10 h-10 rounded-full object-cover" src={"/upload/" + currentUser.profilePic} alt="" /> */}
             <input className="border-none outline-none px-10 py-20 bg-transparent w-3/5 text-gray-700"
               type="text"
               placeholder={`What's on your mind ${currentUser.nombre}?`}

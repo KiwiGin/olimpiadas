@@ -7,6 +7,7 @@ import autenticacionRoutes from './routes/autenticacion.js';
 import server from './websock.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import multer from 'multer';
 
 
 //middlewares
@@ -21,6 +22,21 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, '../webSenati/public/upload')
+    },
+    filename: function (req, file, cb) {
+      cb(null,Date.now() + file.originalname)
+    }
+})
+  
+const upload = multer({ storage: storage })
+
+app.post("/api/upload", upload.single('file'), (req, res) => {
+    const file = req.file;
+    res.status(200).json(file.filename);
+})
 
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/contenidos', contenidoRoutes);
