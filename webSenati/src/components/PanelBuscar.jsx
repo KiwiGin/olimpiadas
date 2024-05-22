@@ -109,7 +109,7 @@ function PanelBuscar() {
             const resRelaciones = await makeRequest.get(`/relacion?id_usuario=${currentUser.id}`);
             const relaciones = resRelaciones.data;
     
-            // Para cada usuario en el array de usuarios, verificar si está siendo seguido por el usuario actual
+            
             const usuariosConRelaciones = usuariosArray.map(usuario => {
                 // Verificar si el usuario está siendo seguido por el usuario actual
                 const sigue = relaciones.some(relacion => relacion.id_usuarioseguido === usuario.id);
