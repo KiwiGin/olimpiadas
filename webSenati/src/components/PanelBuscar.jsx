@@ -97,7 +97,6 @@ function PanelBuscar() {
 
 
     const handleBuscar = async() => {
-     
         try {
             const res = await makeRequest.get(`/usuarios/buscar?nombre=${busqueda}`);
 
