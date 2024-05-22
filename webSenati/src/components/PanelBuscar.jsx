@@ -4,21 +4,44 @@ import { AuthContext } from "../context/authContext";
 
 
 function PanelBuscar() {
-    // Supongamos que tienes un array de usuarios
-    // const [usuarios, setUsuarios] = useState([]);
+
 
     const [busqueda, setBusqueda] = useState('');
     const [resultados, setResultados] = useState([]);
-    const [idAmigo, setIdAmigo] = useState('');
     
     const { currentUser } = useContext(AuthContext);
     console.log(currentUser.id)
+    let aidi= currentUser.id
 
-    const handleSeguir = async(e) => {
-        e.preventDefault();
-        // Seguir a un usuario
+    useEffect(() => {
+        console.log("cambio el estado")
+        mostrarUsuarios()
+
+    }, [busqueda]);
+
+    async function verificarSeguimiento(){
         try {
-            await makeRequest.post(`/relacion/addRela`, {id_usuario: currentUser.id, id_amigo: idAmigo});
+            console.log("OE: " + aidi)
+            let date = await makeRequest.get(`/relacion?id_usuario=${aidi}`);
+            const prueba = Object.values(date.data);
+            console.log(prueba)
+            //setEstadoAmigo(true)
+            //setColor("red")
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+
+    async function handleSeguir(idamigo){
+        
+        console.log('Usuario a seguir:', idamigo);
+        
+    
+        try {
+            await makeRequest.post(`/relacion/addRela`, {id_usuario: currentUser.id, id_amigo: idamigo});
+            window.location.reload()
+
 
         } catch (error) {
             console.log(error);
@@ -26,44 +49,82 @@ function PanelBuscar() {
 
     }
 
+    async function handleNoSeguir(idamigo){
+        console.log('Usuario a dejar de seguir:', idamigo);
+        try {
+            await makeRequest.post(`/relacion/deleteRela`, {id_usuario: currentUser.id, id_amigo: idamigo});
+            window.location.reload()
+          
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    
+    const mostrarUsuarios = async() => {
+        try {
+            const res = await makeRequest.get(`/usuarios/buscarAll`);
+            const userData = res.data;
+            // Convertir el objeto de usuarios en un array de usuarios
+            const usuariosArray = Object.values(userData);
+    
+            // Obtener las relaciones de seguimiento para el usuario actual
+            const resRelaciones = await makeRequest.get(`/relacion?id_usuario=${currentUser.id}`);
+            const relaciones = resRelaciones.data;
+    
+            // Para cada usuario en el array de usuarios, verificar si está siendo seguido por el usuario actual
+            const usuariosConRelaciones = usuariosArray.map(usuario => {
+                // Verificar si el usuario está siendo seguido por el usuario actual
+                const sigue = relaciones.some(relacion => relacion.id_usuarioseguido === usuario.id);
+                return { ...usuario, sigue };
+            });
+
+            console.log(usuariosConRelaciones)
+    
+            setResultados(usuariosConRelaciones);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    
+
+    const handleInputChange = (e) =>{
+        setBusqueda(e.target.value)
+    }
+
+    
+
 
 
     const handleBuscar = async() => {
-        // Filtrar los usuarios que coinciden con la búsqueda
+     
         try {
             const res = await makeRequest.get(`/usuarios/buscar?nombre=${busqueda}`);
 
-            let userData = res.data;
-            // setNombre(userData);
-            console.log(userData);
-            if (!Array.isArray(userData)) {
-                // Intentar convertir userData a una lista
-                if (typeof userData === 'object') {
-                    userData = [userData];
-                } else {
-                    // Manejar el caso en el que no se pueda convertir a una lista
-                    console.error('La respuesta de la solicitud no es una lista ni un objeto:', userData);
-                    setResultados([]);
-                    return;
-                }
-            }
+            const userData = res.data;
+            // Convertir el objeto de usuarios en un array de usuarios
+            const usuariosArray = Object.values(userData);
     
-            // Actualizar el estado de resultados
-            setResultados(userData);
-            resultados.map(usuario => (
-                setIdAmigo(usuario.id)
-            )
-        );
+            // Obtener las relaciones de seguimiento para el usuario actual
+            const resRelaciones = await makeRequest.get(`/relacion?id_usuario=${currentUser.id}`);
+            const relaciones = resRelaciones.data;
+    
+            // Para cada usuario en el array de usuarios, verificar si está siendo seguido por el usuario actual
+            const usuariosConRelaciones = usuariosArray.map(usuario => {
+                // Verificar si el usuario está siendo seguido por el usuario actual
+                const sigue = relaciones.some(relacion => relacion.id_usuarioseguido === usuario.id);
+                return { ...usuario, sigue };
+            });
+
+            console.log(usuariosConRelaciones)
+    
+            setResultados(usuariosConRelaciones);
             
         } catch (err) {
             console.error(err);
         } finally {
             // setIsLoading(false);
         }
-        // const resultados = usuarios.filter(usuario =>
-        //     usuario.nombre.toLowerCase().includes(busqueda.toLowerCase())
-        // );
-        // setResultados(resultados);
     };
 
     return (
@@ -77,10 +138,10 @@ function PanelBuscar() {
                             placeholder='Buscar'
                             className='border-2 border-gray-300 rounded-md p-1'
                             value={busqueda}
-                            onChange={e => setBusqueda(e.target.value)}
+                            onChange={handleInputChange}
                         />
                         <button
-                            className='bg-blue-500 rounded-3xl p-2 px-4'
+                            className='bg-blue-500 rounded-3xl p-2 px-4 hover:bg-blue-900'
                             onClick={handleBuscar}
                         >
                             Buscar
@@ -90,6 +151,7 @@ function PanelBuscar() {
                         <table className='border-collapse border border-gray-800'>
                             <thead>
                                 <tr>
+                                    <th className='border border-gray-800 p-2'>id</th>
                                     <th className='border border-gray-800 p-2'>Nombre</th>
                                     <th className='border border-gray-800 p-2'>Acciones</th>
                                 </tr>
@@ -97,9 +159,15 @@ function PanelBuscar() {
                             <tbody>
                                 {resultados.map(usuario => (
                                     <tr key={usuario.id}>
+                                        
+                                        <td className='border border-gray-800 p-2'>{usuario.id}</td>
                                         <td className='border border-gray-800 p-2'>{usuario.nombre}</td>
                                         <td className='border border-gray-800 p-2'>
-                                            <button onClick={handleSeguir} className='bg-blue-500 rounded-3xl p-2 px-4'>Seguir</button>
+                                            {!usuario.sigue ? 
+                                                (<button onClick={()=>handleSeguir(usuario.id)} className={`bg-blue-500 rounded-3xl p-2 px-4 hover:bg-blue-900`}>Seguir</button>)
+                                                :
+                                                (<button onClick={()=>handleNoSeguir(usuario.id)} className={`bg-red-500 rounded-3xl p-2 px-4 hover:bg-blue-900`}>Dejar de Seguir</button>)
+                                            }
                                         </td>
                                     </tr>
                                 ))}

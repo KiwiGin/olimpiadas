@@ -36,6 +36,24 @@ export const getAmigo = (req, res) => {
     });
 };
 
+export const getAmigos = (req, res) => {
+
+    const q = 'SELECT * FROM usuarios';
+
+    db.query(q, (err, result) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error al obtener el usuario' });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        const { password, ...userInfo } = result;
+        res.json(userInfo);
+    });
+};
+
 export const getUserEstudios = (req, res) => {
     const userId = req.query.id_usuario;
     const q = 'SELECT * FROM estudio WHERE id_usuario = ?';
