@@ -35,7 +35,7 @@ const Share = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await makeRequest.post("/contenidos/postear", { titulo: desc, id_usuario: currentUser.id, ruta: imgUrl});
+      await makeRequest.post("/contenidos/addPost", { desc: desc, nombre: currentUser.nombre, email_usuario:currentUser.email , media: imgUrl});
       setDesc("");
       setFile(null);
       setImgUrl("");

@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../axios";
 import Post from "./Post";
+import Spinner from "../assets/Spinne.svg";
 
 const Posts = ({ userId }) => {
   const { isLoading, error, data } = useQuery({
-    
     queryKey: ["contenidos", userId], 
     queryFn: () =>
-      makeRequest.get("/contenidos", { params: { userId } }).then((res) => res.data), 
+      makeRequest.get("/contenidos/getPosts", { params: { userId } }).then((res) => res.data), 
   });
 
   console.log(data);
@@ -18,7 +18,7 @@ const Posts = ({ userId }) => {
       {error
         ? "Something went wrong!"
         : isLoading
-        ? "loading"
+        ? <img src={Spinner} alt="Loading..." />
         : data.map((post) => <Post post={post} key={post.id} />)}
     </div>
   );

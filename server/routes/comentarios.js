@@ -1,9 +1,10 @@
 import express from 'express';
-import {  } from '../controllers/comentario.js';
+import { getComments, addComment } from '../controllers/comentario.js';
 
 const router = express.Router();
 
-router.get('', )
+router.get('/', getComments)
+router.post('/addComment', addComment)
 
 
 export default router;

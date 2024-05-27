@@ -11,6 +11,7 @@ import moment from "moment";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
 import PerfilDefault from '../assets/perfil_default.svg';
+import Spinner from "../assets/Spinne.svg";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -50,7 +51,7 @@ const Post = ({ post }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete("/posts/" + post.id);
+      await axios.delete("/posts/" + post.email);
     } catch (err) {
       console.error(err);
     }
@@ -65,28 +66,28 @@ const Post = ({ post }) => {
             <img className="w-10 h-10 rounded-full object-cover bg-white" src={PerfilDefault} alt="" />
             <div className="flex flex-col">
               <Link
-                to={`/profile/${post.userid}`}
+                to={`/profile/${post.id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <span className="font-medium">{post.usernombre}</span>
+                <span className="font-medium">{post.nombre_usario}</span>
               </Link>
               <span className="text-xs">{moment(post.fecha_subida).fromNow()}</span>
             </div>
           </div>
           <MoreHorizIcon onClick={() => setMenuOpen(!menuOpen)} />
-          {menuOpen && post.userid === currentUser.id && (
+          {menuOpen && post.email_usuario === currentUser.email && (
             <button onClick={handleDelete}>delete</button>
           )}
         </div>
         <div className="my-5">
-          <p>{post.titulo}</p>
-          <img className="w-full max-h-[500px] object-cover mt-5" src={"/upload/" + post.ruta} alt="" />
+          <p>{post.descripcion}</p>
+          <img className="w-full max-h-[500px] object-cover mt-5" src={"/upload/" + post.media} alt="" />
           {/* <img className="w-full max-h-[500px] object-cover mt-5" src={"https://images.pexels.com/photos/21287054/pexels-photo-21287054/free-photo-of-comida-ciudad-vacaciones-calle.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"} alt="" /> */}
         </div>
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-2 cursor-pointer text-[14px]">
             {isLoading ? (
-              "loading"
+              <img src={Spinner} alt="" className="h-5" />
             ) : likes.includes(currentUser.id) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "red" }}
