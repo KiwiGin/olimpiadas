@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from 'uuid';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -20,16 +20,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore and get a reference to the service
-
 export const storage = getStorage(app);
-
 export const db = getFirestore(app);
 
+export async function uploadImageAndSaveToFirestore(file, metadata) {
+  try {
+    const storageRef = ref(storage, 'images/' + v4());
+    
+    // Convertir el buffer a un array de bytes
+    const bytes = Buffer.from(file.buffer);
 
-export function uploadImageAvatar(file) {
-    const storageRef = ref(storage, 'avatars/'+v4());
-    return uploadBytes(storageRef, file).then((snapshot) => {
-        console.log('Uploaded a blob or file!', snapshot);
-        // return snapshot;
-    });
+    // Subir los bytes a Firebase Storage
+    const snapshot = await uploadBytes(storageRef, bytes, metadata);
+
+    const downloadURL = await getDownloadURL(snapshot.ref);
+
+    return downloadURL;
+  } catch (error) {
+    console.error("Error al subir la imagen:", error);
+    throw error;
+  }
 }

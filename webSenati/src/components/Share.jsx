@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../context/authContext";
 import { makeRequest } from "../axios";
 import Image from "../assets/img.png";
+import CancelIcon from '@mui/icons-material/Cancel';
 import PerfilDefault from '../assets/perfil_default.svg';
 
 const Share = () => {
@@ -17,10 +18,6 @@ const Share = () => {
     const upload = async () => {
       try {
         setLoading(true);
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await makeRequest.post("/upload", formData);
-        setImgUrl(res.data);
       } catch (err) {
         console.log(err);
       } finally {
@@ -33,12 +30,21 @@ const Share = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+  
     try {
       setLoading(true);
-      await makeRequest.post("/contenidos/addPost", { desc: desc, nombre: currentUser.nombre, email_usuario:currentUser.email , media: imgUrl});
+      console.log("file: ", file);
+      const tipo = file.type.split("/")[1];
+  
+      const formData = new FormData();
+      formData.append('media', file);
+      formData.append('desc', desc);
+      formData.append('nombre', currentUser.nombre);
+      formData.append('email_usuario', currentUser.email);
+  
+      await makeRequest.post("/contenidos/addPost", formData);
       setDesc("");
       setFile(null);
-      setImgUrl("");
       window.location.reload();
     } catch (err) {
       console.log(err);
@@ -46,6 +52,7 @@ const Share = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="shadow-custom bg-white rounded-3xl m-5">
@@ -64,7 +71,12 @@ const Share = () => {
           </div>
           <div className="flex flex-1 justify-end">
             {file && (
-              <img className="w-24 h-24 object-cover rounded-none" alt="" src={URL.createObjectURL(file)} />
+              <div className="relative border">
+                <img className="w-full h-full object-cover rounded-none" alt="" src={URL.createObjectURL(file)} />
+                <div className="absolute w-fit h-fit rounded-full top-0 right-0 cursor-pointer bg-white opacity-0 hover:opacity-100 hover:scale-100 ease-in-out duration-300 delay-75">
+                  <CancelIcon className="w-full h-full object-cover" onClick={() => setFile(null)}/>
+                </div>
+              </div>
             )}
           </div>
         </div>

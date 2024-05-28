@@ -1,8 +1,9 @@
 import { db } from "../firebase-config.js";
-import { collection, addDoc, getDocs, where, query, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, where, query, deleteDoc, orderBy } from "firebase/firestore";
+import jwt from 'jsonwebtoken'
 
 export const getComments = async (req, res) => {
-    console.log("post_id: "+req.query.post_id);
+    console.log("post_id: "+req.query.postId);
     
     try {
         const usuariosQuery = query(collection(db, 'usuarios'));
@@ -15,7 +16,7 @@ export const getComments = async (req, res) => {
         // const misPosts = misPostsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         const ComentariosPromises = usuarios.map(async (usuario) => {
-            const comentarioQuery = query(collection(db, 'comentarios'), where('email_usuario', '==', usuario.email), where('post_id', '==', req.query.post_id));
+            const comentarioQuery = query(collection(db, 'comentarios'), where('email_usuario', '==', usuario.email), where('post_id', '==', req.query.postId));
             const comentarioSnapshot = await getDocs(comentarioQuery);
             const comentarios= comentarioSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             return comentarios;
@@ -36,16 +37,30 @@ export const getComments = async (req, res) => {
 };
 
 export const addComment = async (req, res) => {
-    try {
-        await addDoc(collection(db, 'comentarios'), {
-            email_usuario: req.body.email_usuario,
-            comentario: req.body.comentario,
-            fecha: req.body.fecha
-        });
-    
-        res.status(200).json({ message: 'Comentario agregado' });
+    const token = req.cookies.accessToken;
+    if(!token) return res.status(401).json('No hay token');
+
+    jwt.verify(token, "secretkey", async (err, userInfo) => {
+        if(err) return res.status(403).json('Token no válido');
+        try {
+            const date = new Date();
+            const offset = date.getTimezoneOffset() * 60000;
+            const localISOTime = new Date(date - offset).toISOString().slice(0, -1);
+            await addDoc(collection(db, 'comentarios'), {
+                post_id: req.body.post_id,
+                email_usuario: req.body.email_usuario,
+                nombre_usuario: req.body.nombre_usuario,
+                comentario: req.body.comentario,
+                fecha_subida: localISOTime
+            });
+            console.log('Comentario agregado');
         
-    } catch (error) {
-        res.status(500).json({ message: 'Error al agregar el comentario' });
-    }
+            res.status(200).json({ message: 'Comentario agregado' });
+            
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: 'Error al agregar el comentario' });
+        }
+    });
+    
 };

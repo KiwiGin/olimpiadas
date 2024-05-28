@@ -7,10 +7,10 @@ const Posts = ({ userId }) => {
   const { isLoading, error, data } = useQuery({
     queryKey: ["contenidos", userId], 
     queryFn: () =>
-      makeRequest.get("/contenidos/getPosts", { params: { userId } }).then((res) => res.data), 
+      makeRequest.get("/contenidos/", { params: { userId } }).then((res) => res.data), 
   });
 
-  console.log(data);
+  console.log({data, isLoading, error});
 
 
   return (

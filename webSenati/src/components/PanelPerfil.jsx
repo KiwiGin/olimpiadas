@@ -52,90 +52,90 @@ function PanelPerfil() {
 
 
     const { currentUser } = useContext(AuthContext);
-    console.log(currentUser.id)
+    console.log(currentUser.email)
 
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const res = await makeRequest.get(`/usuarios/find?id_usuario=${currentUser.id}`);
+    // useEffect(() => {
+    //     const fetchUserInfo = async () => {
+    //         try {
+    //             const res = await makeRequest.get(`/usuarios/find?id_usuario=${currentUser.id}`);
 
-                const userData = res.data;
-                // setNombre(userData);
-                console.log(userData);
-                setEmail(userData.email);
-                setFechaNacimiento(userData.fecha_nacimiento);
-                setGenero(userData.genero);
-                setTelefono(userData.telefono);
-                setDireccion(userData.direccion);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                // setIsLoading(false);
-            }
-        };
-        fetchUserInfo();
-    }, [currentUser.id]);
+    //             const userData = res.data;
+    //             // setNombre(userData);
+    //             console.log(userData);
+    //             setEmail(userData.email);
+    //             setFechaNacimiento(userData.fecha_nacimiento);
+    //             setGenero(userData.genero);
+    //             setTelefono(userData.telefono);
+    //             setDireccion(userData.direccion);
+    //         } catch (err) {
+    //             console.error(err);
+    //         } finally {
+    //             // setIsLoading(false);
+    //         }
+    //     };
+    //     fetchUserInfo();
+    // }, [currentUser.id]);
 
-    useEffect(() => {
-        const fetchUserEstudios = async () => {
-            try {
-                const res1 = await makeRequest.get(`/usuarios/estudios?id_usuario=${currentUser.id}`);
-                const userData1 = res1.data;
-                console.log(res1.data);
-                if(userData1.length === 0) {
-                    setTitulo("No hay estudios registrados");
-                    setInstitucion("No hay estudios registrados");
-                    setCiudad("No hay estudios registrados");
-                    setPais("No hay estudios registrados");
-                    setFechaInicio("No hay estudios registrados");
-                    setFechaFin("No hay estudios registrados");
-                }else{
-                    setTitulo(userData1.titulo);
-                    setInstitucion(userData1.escuela);
-                    setCiudad(userData1.ciudad);
-                    setPais(userData1.pais);
-                    setFechaInicio(userData1.fecha_inicio);
-                    setFechaFin(userData1.fecha_fin);
+    // useEffect(() => {
+    //     const fetchUserEstudios = async () => {
+    //         try {
+    //             const res1 = await makeRequest.get(`/usuarios/estudios?id_usuario=${currentUser.id}`);
+    //             const userData1 = res1.data;
+    //             console.log(res1.data);
+    //             if(userData1.length === 0) {
+    //                 setTitulo("No hay estudios registrados");
+    //                 setInstitucion("No hay estudios registrados");
+    //                 setCiudad("No hay estudios registrados");
+    //                 setPais("No hay estudios registrados");
+    //                 setFechaInicio("No hay estudios registrados");
+    //                 setFechaFin("No hay estudios registrados");
+    //             }else{
+    //                 setTitulo(userData1.titulo);
+    //                 setInstitucion(userData1.escuela);
+    //                 setCiudad(userData1.ciudad);
+    //                 setPais(userData1.pais);
+    //                 setFechaInicio(userData1.fecha_inicio);
+    //                 setFechaFin(userData1.fecha_fin);
 
-                }
-            } catch (err) {
-                console.error(err);
-            } finally {
-                // setIsLoading(false);
-            }
-        };
-        fetchUserEstudios();
-    }, [currentUser.id]);
+    //             }
+    //         } catch (err) {
+    //             console.error(err);
+    //         } finally {
+    //             // setIsLoading(false);
+    //         }
+    //     };
+    //     fetchUserEstudios();
+    // }, [currentUser.id]);
 
-    useEffect(() => {
-        const fetchUserTrabajo = async () => {
-            try {
-                const res2 = await makeRequest.get(`/usuarios/trabajo?id_usuario=${currentUser.id}`);
-                console.log(res2.data);
-                const userData2 = res2.data;
-                if(userData2.length === 0) {
-                    setEmpresa("No hay trabajos registrados");
-                    setPuesto("No hay trabajos registrados");
-                    setCiudadTrabajo("No hay trabajos registrados");
-                    setPaisTrabajo("No hay trabajos registrados");
-                    setFechaInicioTrabajo("No hay trabajos registrados");
-                    setFechaFinTrabajo("No hay trabajos registrados");
-                }else{
-                    setEmpresa(userData2.empresa);
-                    setPuesto(userData2.puesto);
-                    setCiudadTrabajo(userData2.ciudad);
-                    setPaisTrabajo(userData2.pais);
-                    setFechaInicioTrabajo(userData2.fecha_inicio);
-                    setFechaFinTrabajo(userData2.fecha_fin);
-                }
-            } catch (err) {
-                console.error(err);
-            } finally {
-                // setIsLoading(false);
-            }
-        };
-        fetchUserTrabajo();
-    }, [currentUser.id]);
+    // useEffect(() => {
+    //     const fetchUserTrabajo = async () => {
+    //         try {
+    //             const res2 = await makeRequest.get(`/usuarios/trabajo?id_usuario=${currentUser.id}`);
+    //             console.log(res2.data);
+    //             const userData2 = res2.data;
+    //             if(userData2.length === 0) {
+    //                 setEmpresa("No hay trabajos registrados");
+    //                 setPuesto("No hay trabajos registrados");
+    //                 setCiudadTrabajo("No hay trabajos registrados");
+    //                 setPaisTrabajo("No hay trabajos registrados");
+    //                 setFechaInicioTrabajo("No hay trabajos registrados");
+    //                 setFechaFinTrabajo("No hay trabajos registrados");
+    //             }else{
+    //                 setEmpresa(userData2.empresa);
+    //                 setPuesto(userData2.puesto);
+    //                 setCiudadTrabajo(userData2.ciudad);
+    //                 setPaisTrabajo(userData2.pais);
+    //                 setFechaInicioTrabajo(userData2.fecha_inicio);
+    //                 setFechaFinTrabajo(userData2.fecha_fin);
+    //             }
+    //         } catch (err) {
+    //             console.error(err);
+    //         } finally {
+    //             // setIsLoading(false);
+    //         }
+    //     };
+    //     fetchUserTrabajo();
+    // }, [currentUser.id]);
 
       
     
@@ -252,7 +252,7 @@ function PanelPerfil() {
                 </div>
             </div>
 
-            <Posts userId={currentUser.id}/>
+            <Posts userId={currentUser.email}/>
 
         </div>
     </>

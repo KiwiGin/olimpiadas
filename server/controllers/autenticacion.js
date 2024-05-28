@@ -1,5 +1,5 @@
 // import { db } from "../connect.js";
-import { db, uploadImageAvatar } from "../firebase-config.js";
+import { db } from "../firebase-config.js";
 import { collection, addDoc, getDocs, where, query } from "firebase/firestore";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';

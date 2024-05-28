@@ -5,7 +5,7 @@ import Posts from './Posts'
 function PanelContent() {
   return (
     <>
-        <div className='relative min-w-400px h-full bg-green-200 overflow-auto scrollbar-hide'>
+        <div className='relative min-w-400px max-w-800px h-full bg-green-200 overflow-auto scrollbar-hide'>
           <Share/>
           <Posts/>
           {/* <div className="absolute bottom-4 right-4">

@@ -6,44 +6,50 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
 import Comments from "../components/Comments";
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import moment from "moment";
-import axios from "axios";
+import { makeRequest } from "../axios";
 import { AuthContext } from "../context/authContext";
 import PerfilDefault from '../assets/perfil_default.svg';
 import Spinner from "../assets/Spinne.svg";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [likes, setLikes] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   const { currentUser } = useContext(AuthContext);
 
-  useEffect(() => {
-    const fetchLikes = async () => {
-      try {
-        const res = await axios.get("/likes?postId=" + post.id);
-        setLikes(res.data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["likes", post.id], 
+    queryFn: async () => {
+      // console.log('WAASAAA');
+      const response = await makeRequest.get('/likes/', { params: { postId: post.id } });
+      // console.log('PASO');
+      return response.data;
+    }
+  });
+
+  const queryClient = useQueryClient();
+
+  // Additional logging for debugging
+  // console.log({ isLoading, error, data });
+
+  const mutation = useMutation({
+    mutationFn: (liked) => {
+      if(liked) {
+        return makeRequest.delete('/likes/deleteLike/', { params:{postId: post.id} })
       }
-    };
-    fetchLikes();
-  }, [post.id]);
+      return makeRequest.post('/likes/addLike', {postId: post.id, nombre_usuario: currentUser.nombre})
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["likes"]);
+    },
+  })
 
   const handleLike = async () => {
     try {
-      if (likes.includes(currentUser.id)) {
-        await axios.delete("/likes?postId=" + post.id);
-        setLikes(likes.filter((id) => id !== currentUser.id));
-      } else {
-        await axios.post("/likes", { postId: post.id });
-        setLikes([...likes, currentUser.id]);
-      }
+      mutation.mutate(data.includes(currentUser.email))
     } catch (err) {
       console.error(err);
     }
@@ -51,7 +57,7 @@ const Post = ({ post }) => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete("/posts/" + post.email);
+      // await axios.delete("/posts/" + post.email);
     } catch (err) {
       console.error(err);
     }
@@ -81,14 +87,16 @@ const Post = ({ post }) => {
         </div>
         <div className="my-5">
           <p>{post.descripcion}</p>
-          <img className="w-full max-h-[500px] object-cover mt-5" src={"/upload/" + post.media} alt="" />
+          <div className="w-full h-full">
+            <img className="w-full h-full object-fit mt-5" src={post.media} alt="" />
+          </div>
           {/* <img className="w-full max-h-[500px] object-cover mt-5" src={"https://images.pexels.com/photos/21287054/pexels-photo-21287054/free-photo-of-comida-ciudad-vacaciones-calle.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"} alt="" /> */}
         </div>
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-2 cursor-pointer text-[14px]">
             {isLoading ? (
               <img src={Spinner} alt="" className="h-5" />
-            ) : likes.includes(currentUser.id) ? (
+            ) : data.includes(currentUser.email) ? (
               <FavoriteOutlinedIcon
                 style={{ color: "red" }}
                 onClick={handleLike}
@@ -96,7 +104,8 @@ const Post = ({ post }) => {
             ) : (
               <FavoriteBorderOutlinedIcon onClick={handleLike} />
             )}
-            {likes?.length} Likes
+            {/* {console.log(data)} */}
+            {data?.length} Likes
           </div>
           <div className="flex items-center gap-2 cursor-pointer text-[14px]" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />

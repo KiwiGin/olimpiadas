@@ -5,6 +5,7 @@ import contenidoRoutes from './routes/contenidos.js';
 import comentarioRoutes from './routes/comentarios.js';
 import autenticacionRoutes from './routes/autenticacion.js';
 import relacionRoutes from './routes/relacion.js';
+import likeRoutes from './routes/likes.js';
 import server from './websock.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -23,27 +24,12 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, '../webSenati/public/upload')
-    },
-    filename: function (req, file, cb) {
-      cb(null,Date.now() + file.originalname)
-    }
-})
-  
-const upload = multer({ storage: storage })
-
-app.post("/api/upload", upload.single('file'), (req, res) => {
-    const file = req.file;
-    res.status(200).json(file.filename);
-})
-
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/contenidos', contenidoRoutes);
 app.use('/api/comentarios', comentarioRoutes);
 app.use('/api/autenticacion', autenticacionRoutes);
 app.use('/api/relacion', relacionRoutes);
+app.use('/api/likes', likeRoutes);
 
 app.listen(8000, () => {
     console.log('Server is running on port 8000...');

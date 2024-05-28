@@ -6,7 +6,7 @@ const client = new Socket("ws://127.0.0.1:8001/");
 const Chat = ({ usuarioName }) => {
   const [miMensaje, setMiMensaje] = useState("");
   const [messages, setMessages] = useState([]);
-  const [isMinimized, setIsMinimized] = useState(false); // Estado para manejar si el chat está minimizado
+  const [isMinimized, setIsMinimized] = useState(true); // Estado para manejar si el chat está minimizado
   const messagesEndRef = useRef(null); // Referencia al elemento final de los mensajes
 
   const scrollToBottom = () => {
