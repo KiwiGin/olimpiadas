@@ -4,10 +4,11 @@ import Post from "./Post";
 import Spinner from "../assets/Spinne.svg";
 
 const Posts = ({ userId }) => {
+  console.log("userId: "+userId);
   const { isLoading, error, data } = useQuery({
     queryKey: ["contenidos", userId], 
-    queryFn: () =>
-      makeRequest.get("/contenidos/", { params: { userId } }).then((res) => res.data), 
+    queryFn: async () =>
+      await makeRequest.get("/contenidos/get/", {params: {userId: userId}}).then((res) => res.data), 
   });
 
   console.log({data, isLoading, error});
@@ -19,7 +20,7 @@ const Posts = ({ userId }) => {
         ? "Something went wrong!"
         : isLoading
         ? <img src={Spinner} alt="Loading..." />
-        : data.map((post) => <Post post={post} key={post.id} />)}
+        : data?.map((post) => <Post post={post} key={post.id} />)}
     </div>
   );
 };

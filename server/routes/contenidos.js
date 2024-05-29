@@ -7,7 +7,7 @@ import { getPosts } from '../controllers/contenido.js';
 const router = express.Router();
 const upload = multer();
 
-router.get('/', getPosts)
+router.get('/get', getPosts)
 router.post('/addPost', upload.single('media'), async (req, res) => {
     try {
         // Accede al archivo subido a través de req.file

@@ -1,11 +1,11 @@
 import { server as WebSocketServer } from 'websocket';
 import http from "http";
 import { connected } from "process";
-const webSocketServerPort = 8001;
+const webSocketServerPort = 8002;
 
 const server=http.createServer();
 server.listen(webSocketServerPort);
-console.log("listening on port 8001...")
+console.log("listening on port 8002...")
 
 const wsServer = new WebSocketServer({
     httpServer: server

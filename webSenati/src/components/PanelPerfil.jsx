@@ -21,7 +21,7 @@ import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import SmartphoneIcon from '@mui/icons-material/Smartphone';
 import BusinessIcon from '@mui/icons-material/Business';
 import EditIcon from '@mui/icons-material/Edit';
-
+import { useLocation } from 'react-router-dom';
 import Posts from './Posts';
 import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../context/authContext";
@@ -54,6 +54,10 @@ function PanelPerfil() {
     const { currentUser } = useContext(AuthContext);
     console.log(currentUser.email)
 
+    const userId = useLocation().pathname.split("/")[2];
+    const { isLoading, error, data } = useQuery(["user", userId], () => makeRequest.get("/usuarios/find/", {params: {userId: userId}}).then((res) => {res.data;}));
+
+    console.log(data);
     // useEffect(() => {
     //     const fetchUserInfo = async () => {
     //         try {
@@ -251,7 +255,7 @@ function PanelPerfil() {
                     </div>
                 </div>
             </div>
-
+            {console.log("entrada: "+currentUser.email)}
             <Posts userId={currentUser.email}/>
 
         </div>

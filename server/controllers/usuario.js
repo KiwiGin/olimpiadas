@@ -2,7 +2,7 @@ import { db } from "../firebase-config.js";
 import { collection, addDoc, getDocs, where, query, deleteDoc, orderBy } from "firebase/firestore";
 
 export const getUsers = async (req, res) => {
-    const nombre_usario = req.body.nombre;
+    const nombre_usario = req.query.nombre;
     const q = query(collection(db, 'usuarios'), where('nombre', '==', nombre_usario));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {

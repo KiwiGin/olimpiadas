@@ -12,27 +12,27 @@ function Modal() {
     const [nombre, setNombre] = useState('');
 
     const { currentUser } = useContext(AuthContext);
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const res = await makeRequest.get(`/usuarios/find?id_usuario=${currentUser.id}`);
+    // useEffect(() => {
+    //     const fetchUserInfo = async () => {
+    //         try {
+    //             const res = await makeRequest.get(`/usuarios/find?id_usuario=${currentUser.id}`);
 
-                const userData = res.data;
-                console.log(userData);
-                setNombre(userData.nombre);
-                setEmail(userData.email);
-                setFechaNacimiento(userData.fecha_nacimiento);
-                setGenero(userData.genero);
-                setTelefono(userData.telefono);
-                setDireccion(userData.direccion);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                // setIsLoading(false);
-            }
-        };
-        fetchUserInfo();
-    }, [currentUser.id]);
+    //             const userData = res.data;
+    //             console.log(userData);
+    //             setNombre(userData.nombre);
+    //             setEmail(userData.email);
+    //             setFechaNacimiento(userData.fecha_nacimiento);
+    //             setGenero(userData.genero);
+    //             setTelefono(userData.telefono);
+    //             setDireccion(userData.direccion);
+    //         } catch (err) {
+    //             console.error(err);
+    //         } finally {
+    //             // setIsLoading(false);
+    //         }
+    //     };
+    //     fetchUserInfo();
+    // }, [currentUser.id]);
 
 
     const handleClick = async() => {
