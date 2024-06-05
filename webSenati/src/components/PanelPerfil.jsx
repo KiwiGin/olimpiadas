@@ -28,121 +28,54 @@ import { AuthContext } from "../context/authContext";
 import { makeRequest } from "../axios";
 import Modal from './Modal';
 
-function PanelPerfil() {
-
-    // const [nombre, setNombre] = useState("");
-    const [email, setEmail] = useState("No hay email registrado");
-    const [fechaNacimiento, setFechaNacimiento] = useState("No hay");
-    const [genero, setGenero] = useState("no hay");
-    const [telefono, setTelefono] = useState("");
-    const [direccion, setDireccion] = useState("");
-    const [titulo, setTitulo] = useState("");
-    const [institucion, setInstitucion] = useState("");
-    const [ciudad, setCiudad] = useState("");
-    const [pais, setPais] = useState("");
-    const [fechaInicio, setFechaInicio] = useState("");
-    const [fechaFin, setFechaFin] = useState("");
-    const [empresa, setEmpresa] = useState("");
-    const [puesto, setPuesto] = useState("");
-    const [ciudadTrabajo, setCiudadTrabajo] = useState("");
-    const [paisTrabajo, setPaisTrabajo] = useState("");
-    const [fechaInicioTrabajo, setFechaInicioTrabajo] = useState("");
-    const [fechaFinTrabajo, setFechaFinTrabajo] = useState("");
-
-
-
+function PanelPerfil({ userId }) {
+    const [finalUserId, setFinalUserId] = useState(null);
     const { currentUser } = useContext(AuthContext);
     console.log(currentUser.email)
 
-    const userId = useLocation().pathname.split("/")[2];
-    const { isLoading, error, data } = useQuery(["user", userId], () => makeRequest.get("/usuarios/find/", {params: {userId: userId}}).then((res) => {res.data;}));
+    console.log(userId);
 
-    console.log(data);
-    // useEffect(() => {
-    //     const fetchUserInfo = async () => {
-    //         try {
-    //             const res = await makeRequest.get(`/usuarios/find?id_usuario=${currentUser.id}`);
-
-    //             const userData = res.data;
-    //             // setNombre(userData);
-    //             console.log(userData);
-    //             setEmail(userData.email);
-    //             setFechaNacimiento(userData.fecha_nacimiento);
-    //             setGenero(userData.genero);
-    //             setTelefono(userData.telefono);
-    //             setDireccion(userData.direccion);
-    //         } catch (err) {
-    //             console.error(err);
-    //         } finally {
-    //             // setIsLoading(false);
-    //         }
-    //     };
-    //     fetchUserInfo();
-    // }, [currentUser.id]);
+    const { isLoading: idLoading, error: idError, data: idData } = useQuery({
+        queryKey: ["id", userId],
+        queryFn: async () => {
+            if (!userId) {
+                throw new Error("User ID is undefined");
+            }
+            const response = await makeRequest.get("/usuarios/findId/", { params: { userId: userId } });
+            return response.data;
+        },
+        enabled: !!userId, // Solo ejecuta la consulta si userId está definido
+    });
+    console.log({ idData, idError});
+    console.log(idData.email);
 
     // useEffect(() => {
-    //     const fetchUserEstudios = async () => {
-    //         try {
-    //             const res1 = await makeRequest.get(`/usuarios/estudios?id_usuario=${currentUser.id}`);
-    //             const userData1 = res1.data;
-    //             console.log(res1.data);
-    //             if(userData1.length === 0) {
-    //                 setTitulo("No hay estudios registrados");
-    //                 setInstitucion("No hay estudios registrados");
-    //                 setCiudad("No hay estudios registrados");
-    //                 setPais("No hay estudios registrados");
-    //                 setFechaInicio("No hay estudios registrados");
-    //                 setFechaFin("No hay estudios registrados");
-    //             }else{
-    //                 setTitulo(userData1.titulo);
-    //                 setInstitucion(userData1.escuela);
-    //                 setCiudad(userData1.ciudad);
-    //                 setPais(userData1.pais);
-    //                 setFechaInicio(userData1.fecha_inicio);
-    //                 setFechaFin(userData1.fecha_fin);
+    //     setFinalUserId(idData.email);
+    // }, [idData]);
 
-    //             }
-    //         } catch (err) {
-    //             console.error(err);
-    //         } finally {
-    //             // setIsLoading(false);
-    //         }
-    //     };
-    //     fetchUserEstudios();
-    // }, [currentUser.id]);
+    // console.log(finalUserId);
 
-    // useEffect(() => {
-    //     const fetchUserTrabajo = async () => {
-    //         try {
-    //             const res2 = await makeRequest.get(`/usuarios/trabajo?id_usuario=${currentUser.id}`);
-    //             console.log(res2.data);
-    //             const userData2 = res2.data;
-    //             if(userData2.length === 0) {
-    //                 setEmpresa("No hay trabajos registrados");
-    //                 setPuesto("No hay trabajos registrados");
-    //                 setCiudadTrabajo("No hay trabajos registrados");
-    //                 setPaisTrabajo("No hay trabajos registrados");
-    //                 setFechaInicioTrabajo("No hay trabajos registrados");
-    //                 setFechaFinTrabajo("No hay trabajos registrados");
-    //             }else{
-    //                 setEmpresa(userData2.empresa);
-    //                 setPuesto(userData2.puesto);
-    //                 setCiudadTrabajo(userData2.ciudad);
-    //                 setPaisTrabajo(userData2.pais);
-    //                 setFechaInicioTrabajo(userData2.fecha_inicio);
-    //                 setFechaFinTrabajo(userData2.fecha_fin);
-    //             }
-    //         } catch (err) {
-    //             console.error(err);
-    //         } finally {
-    //             // setIsLoading(false);
-    //         }
-    //     };
-    //     fetchUserTrabajo();
-    // }, [currentUser.id]);
+    const { isLoading: userLoading, error: userError, data: userData } = useQuery({
+        queryKey: ["user", idData.email], 
+        queryFn: async() => await makeRequest.get("/usuarios/find/", {params: {userId: idData.email}}).then((res) => res.data),
+    })
 
-      
-    
+    // console.log(userData);
+
+    const { isLoading: estudiosLoading, error: estudiosError, data: estudiosData } = useQuery({
+        queryKey: ["estudios", idData.email], 
+        queryFn: async() => await makeRequest.get("/usuarios/estudios/", {params: {userId: idData.email}}).then((res) => res.data),
+    })
+
+    // console.log(estudiosData);
+
+    const { isLoading: trabajoLoading, error: trabajoError, data: trabajoData } = useQuery({
+        queryKey: ["trabajo", idData.email], 
+        queryFn: async() => await makeRequest.get("/usuarios/trabajo/", {params: {userId: idData.email}}).then((res) => res.data),
+    })
+
+    // console.log(trabajoData)
+
   return (
     <>
         <div className='relative min-w-400px max-w-800px h-full bg-green-200 overflow-auto scrollbar-hide'>
@@ -155,15 +88,15 @@ function PanelPerfil() {
                     <div className="flex flex-1 gap-10 flex-col justify-start">
                         <div className="flex flex-row gap-5">
                             <EmailOutlinedIcon />
-                            <span>{email}</span>
+                            <span>{userData[0].email}</span>
                         </div>
                         <div className="flex flex-row gap-5">
                             <CalendarMonthIcon />
-                            <span>{fechaNacimiento}</span>
+                            <span>{userData[0].fecha_nacimiento}</span>
                         </div>
                     </div>
                     <div className="flex flex-1 flex-col items-center gap-5 text-3xl mt-6">
-                        <span>{currentUser.nombre}</span>
+                        <span>{userData[0].nombre}</span>
                         <div className="flex flex-1 items-center justify-end gap-10">
                             <Modal/>
                         </div>
@@ -171,15 +104,15 @@ function PanelPerfil() {
                     <div className="flex flex-1 flex-col justify-end gap-10">
                         <div className="flex flex-row gap-5">
                             <GenderIcon />
-                            <span>{genero}</span>
+                            <span>{userData[0].genero}</span>
                         </div>
                         <div className="flex flex-row gap-5">
                             <SmartphoneIcon />
-                            <span>{telefono}</span>
+                            <span>{userData[0].telefono}</span>
                         </div>
                         <div className="flex flex-row gap-5">
                             <FmdGoodIcon />
-                            <span>{direccion}</span>
+                            <span>{userData[0].direccion.label}</span>
                         </div>
                     </div>
                     
@@ -198,27 +131,27 @@ function PanelPerfil() {
                     <div className="flex flex-1 gap-2 flex-col">
                         <div className='flex flex-row gap-5'>
                             <SchoolIcon />
-                            <span>{titulo}</span>
+                            <span>{estudiosData[0].titulo}</span>
                         </div>
                         <div className='flex flex-row gap-5'>
                             <ApartmentIcon />
-                            <span>{institucion}</span>
+                        <span>{estudiosData[0].institucion}</span>
                         </div>
                         <div className='flex flex-row gap-5'>
                             <LocationCityIcon />
-                            <span>{ciudad}</span>
+                            <span>{estudiosData[0].ciudad}</span>
                         </div>
                         <div className='flex flex-row gap-5'>
                             <PublicIcon />
-                            <span>{pais}</span>
+                            <span>{estudiosData[0].pais}</span>
                         </div>
                         <div className='flex flex-row gap-5'>
                             <TodayIcon />
-                            <span>{fechaInicio}</span>
+                            <span>{estudiosData[0].fecha_inicio}</span>
                         </div>
                         <div className='flex flex-row gap-5'>
                             <EndTimeIcon />
-                            <span>{fechaFin}</span>
+                            <span>{estudiosData[0].fecha_fin}</span>
                         </div>
                     </div>
                 </div>
@@ -230,33 +163,33 @@ function PanelPerfil() {
                     <div className="flex flex-1 gap-2 flex-col">
                         <div className='flex flex-row gap-5'>
                             <BusinessIcon />
-                            <span>{empresa}</span>
+                            <span>{trabajoData[0].empresa}</span>
                         </div>
                         <div className='flex flex-row gap-5'>
                             <BadgeIcon />
-                            <span>{puesto}</span>
+                            <span>{trabajoData[0].cargo}</span>
                         </div>
                         <div className='flex flex-row gap-5'>
                             <LocationCityIcon />
-                            <span>{ciudadTrabajo}</span>
+                            <span>{trabajoData[0].ciudad}</span>
                         </div>
                         <div className='flex flex-row gap-5'>
                             <PublicIcon />
-                            <span>{paisTrabajo}</span>
+                            <span>{trabajoData[0].pais}</span>
                         </div>
                         <div className='flex flex-row gap-5'>
                             <TodayIcon />
-                            <span>{fechaInicioTrabajo}</span>
+                            <span>{trabajoData[0].fecha_inicio}</span>
                         </div>
                         <div className='flex flex-row gap-5'>
                             <EndTimeIcon />
-                            <span>{fechaFinTrabajo}</span>
+                            <span>{trabajoData[0].fecha_fin}</span>
                         </div>
                     </div>
                 </div>
             </div>
-            {console.log("entrada: "+currentUser.email)}
-            <Posts userId={currentUser.email}/>
+            {console.log("entrada: "+idData.email)}
+            <Posts userId={idData.email}/>
 
         </div>
     </>

@@ -5,6 +5,9 @@ import Spinner from "../assets/Spinne.svg";
 
 const Posts = ({ userId }) => {
   console.log("userId: "+userId);
+  if (userId === undefined) {
+    userId = "";
+  }
   const { isLoading, error, data } = useQuery({
     queryKey: ["contenidos", userId], 
     queryFn: async () =>

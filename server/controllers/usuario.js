@@ -1,9 +1,39 @@
 import { db } from "../firebase-config.js";
-import { collection, addDoc, getDocs, where, query, deleteDoc, orderBy } from "firebase/firestore";
+import { doc,collection, addDoc, getDocs, getDoc, where, query, deleteDoc, orderBy } from "firebase/firestore";
+
+export const getId = async (req, res) => {
+    try {
+        const userId = req.query.userId;
+        console.log("NYA: " + userId);
+
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        const docRef = collection(db, 'usuarios');
+        const docSnap = await getDocs(docRef);
+
+        if (docSnap.empty) {
+            return res.status(404).json({ message: "ID not found" });
+        }
+
+        console.log("RESULTADO: ");
+        docSnap.forEach((doc) => {
+            if(doc.id == userId){
+                console.log("ID: " + doc.id);
+                res.status(200).json(doc.data());
+            }
+        });
+    } catch (error) {
+        console.error("Error retrieving ID:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
 
 export const getUsers = async (req, res) => {
-    const nombre_usario = req.query.nombre;
-    const q = query(collection(db, 'usuarios'), where('nombre', '==', nombre_usario));
+    console.log(req.query.userId);
+    const email_usario = req.query.userId;
+    const q = query(collection(db, 'usuarios'), where('email', '==', email_usario));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
         return res.status(404).json('User not found');
@@ -12,9 +42,11 @@ export const getUsers = async (req, res) => {
     const docs = [];
     querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const { contraseña, ...others } = data;
+        const { contraseña, ...others } = data
+
         docs.push(others);
     });
+    console.log(docs);
     res.status(200).json(docs);
 };
 
@@ -74,14 +106,20 @@ export const getUsers = async (req, res) => {
 // };
 
 export const getUserEstudios = async (req, res) => {
-    const email_usuario = req.body.email_usuario;
+    console.log(req.query.userId);
+    const email_usuario = req.query.userId;
     const q = query(collection(db, 'estudios'), where('email', '==', email_usuario));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
         return res.status(404).json('User not found');
     }
-    // console.log(querySnapshot);
-    const docs = querySnapshot.docs[0].data();
+    //guardar todos los registros sin la contraseña
+    const docs = [];
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        docs.push(data);
+    });
+    console.log(docs);
     res.status(200).json(docs);
 };
 
@@ -99,14 +137,20 @@ export const getUserEstudios = async (req, res) => {
 // };
 
 export const getUserTrabajo = async (req, res) => {
-    const email_usuario = req.body.email_usuario;
+    console.log(req.query.userId);
+    const email_usuario = req.query.userId;
     const q = query(collection(db, 'trabajos'), where('email', '==', email_usuario));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
         return res.status(404).json('User not found');
     }
-    // console.log(querySnapshot);
-    const docs = querySnapshot.docs[0].data();
+    //guardar todos los registros sin la contraseña
+    const docs = [];
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        docs.push(data);
+    });
+    console.log(docs);
     res.status(200).json(docs);
 };
 

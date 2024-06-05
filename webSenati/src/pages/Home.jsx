@@ -21,7 +21,7 @@ export function Home() {
           <Routes>
             <Route path="/" element={<PanelContent />} />
             <Route path="buscar" element={<PanelBuscar />} />
-            <Route path="miperfil" element={<PanelPerfil />} />
+            <Route path="profile/:id" element={<PanelPerfil userId={currentUser.id}/>} />
           </Routes>
         <SidebarDerecho/>
 

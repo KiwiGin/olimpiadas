@@ -15,7 +15,7 @@ export const getPosts = async (req, res) => {
         console.log("UserInfo cuack:");
         console.log(userInfo.id);
         try {
-            if (email_usuario_perfil) {
+            if (email_usuario_perfil.length > 0) {
                 const q = query(collection(db, 'contenidos'), where('email_usuario', '==', email_usuario_perfil), orderBy('fecha_subida', 'desc'));
                 const querySnapshot = await getDocs(q);
                 const docs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));

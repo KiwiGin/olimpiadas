@@ -46,7 +46,7 @@ export default function Sidebar() {
                         <h1 className='text-2xl font-bold'>Buscar</h1>
                     </div>
                 </Link>
-                <Link to="/home/miperfil">
+                <Link to={`/home/profile/${currentUser.id}`}>
                     <div className='flex flex-col items-center justify-center h-16 mb-96 group/item hover:bg-slate-100 rounded-full transition'>
                         <h1 className='text-2xl font-bold'>Perfil</h1>
                     </div>

@@ -71,7 +71,7 @@ export const login = async (req, res) => {
         }
 
         // verificar contraseña
-        const user = querySnapshot.docs[0].data();
+        const user = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))[0];
         const passwordIsValid = bcrypt.compareSync(req.body.contraseña, user.contraseña);
         if (!passwordIsValid) {
             return res.status(400).json('Invalid password');

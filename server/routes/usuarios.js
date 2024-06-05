@@ -1,9 +1,10 @@
 import express from 'express';
-import { getUsers, getUserEstudios, getUserTrabajo, updateUser } from '../controllers/usuario.js';
+import { getUsers, getId, getUserEstudios, getUserTrabajo, updateUser } from '../controllers/usuario.js';
 
 const router = express.Router();
 
 router.get('/find', getUsers)
+router.get('/findId', getId)
 // router.get('/buscar',getAmigo)
 // router.get('/buscarAll',getAmigos)
 router.get('/estudios', getUserEstudios)

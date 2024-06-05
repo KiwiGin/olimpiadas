@@ -72,7 +72,7 @@ const Post = ({ post }) => {
             <img className="w-10 h-10 rounded-full object-cover bg-white" src={PerfilDefault} alt="" />
             <div className="flex flex-col">
               <Link
-                to={`/profile/${post.id}`}
+                to={`/home/profile/${post.usuario_id}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <span className="font-medium">{post.nombre_usario}</span>
